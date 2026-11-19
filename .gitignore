@@ -16,6 +16,11 @@ id_rsa*
 secrets.json
 api_keys.json
 
+# Presentations and Documents (Evaluation deliverables)
+*.pptx
+*.docx
+*.pdf
+
 # Python
 __pycache__/
 *.py[cod]
