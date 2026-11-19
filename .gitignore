@@ -1,12 +1,11 @@
 # Environment variables and secrets (CRITICAL - DO NOT COMMIT)
 .env
-.env.*
+.env*
 *.env
 *.env.local
 *.env.development.local
 *.env.test.local
 *.env.production.local
-!.env.example
 *.pem
 *.key
 *.cert
