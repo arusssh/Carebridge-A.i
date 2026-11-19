@@ -1,10 +1,16 @@
 # CareBridge AI: AI-Powered Healthcare Information & Care Coordination Companion
 
+[![Live Demo on Vercel](https://img.shields.io/badge/Live_Demo-Vercel_Production-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://carebridge-ai-kappa.vercel.app)
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8.svg)](https://tailwindcss.com/)
 [![Clinical Safety](https://img.shields.io/badge/Clinical_Safety-100%25_No_Hallucination-emerald.svg)]()
+
+> 🌐 **Live Website URL:** **[https://carebridge-ai-kappa.vercel.app](https://carebridge-ai-kappa.vercel.app)**  
+> CareBridge AI is deployed and live on Vercel Production. You can test prescription scanning, handwriting OCR, clinical ambiguity verification, the 30-day recovery timeline, and daily medicine checklists directly in any browser.
+
+---
 
 **CareBridge AI** is an AI-assisted healthcare information and care-coordination companion that transforms fragmented healthcare provider documents (discharge summaries, doctor visit notes, prescriptions, and follow-up slips) into clear, trackable, and validated care workflows.
 

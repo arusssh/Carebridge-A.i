@@ -2,6 +2,8 @@
   "name": "carebridge-ai",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://carebridge-ai-kappa.vercel.app",
+  "description": "AI-Powered Clinical Transition & Care Companion",
   "scripts": {
     "build": "cd frontend && npm install && npm run build"
   }
