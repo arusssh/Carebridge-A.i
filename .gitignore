@@ -19,6 +19,8 @@ api_keys.json
 *.pptx
 *.docx
 *.pdf
+build_carebridge_mse2_doc.py
+build_carebridge_presentation.py
 
 # Python
 __pycache__/
