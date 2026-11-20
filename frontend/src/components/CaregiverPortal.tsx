@@ -80,7 +80,7 @@ export const CaregiverPortal: React.FC<CaregiverPortalProps> = ({
     }
   };
 
-  const pendingMorningTasks = carePlan.tasks.filter(
+  const pendingMorningTasks = (carePlan.tasks || []).filter(
     t => t.time_of_day === 'MORNING' && t.status !== 'COMPLETED'
   );
 

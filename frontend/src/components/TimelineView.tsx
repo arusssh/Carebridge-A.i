@@ -269,56 +269,64 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
           </span>
         </div>
 
-        <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
-          {filteredTimeline.map((bucket, bIdx) => (
-            <div key={bIdx} className="relative">
-              {/* Timeline Step Indicator */}
-              <div className="absolute -left-6 sm:-left-8 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-emerald-600 flex items-center justify-center text-emerald-800 font-bold text-xs shadow-2xs tabular-nums">
-                {bIdx + 1}
-              </div>
-
-              <div className="bg-white rounded-lg border border-slate-200 p-5 sm:p-6 shadow-2xs space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                  <h3 className="text-sm font-bold text-slate-900">
-                    {bucket.phase}
-                  </h3>
-                  <span className="text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded tabular-nums">
-                    {bucket.events.length} Milestones
-                  </span>
+        {filteredTimeline.length === 0 ? (
+          <div className="bg-white rounded-lg border border-slate-200 p-8 text-center text-slate-500 text-xs space-y-1">
+            <Calendar className="w-8 h-8 text-slate-300 mx-auto" />
+            <p className="font-semibold text-slate-700">No events found for this phase filter.</p>
+            <p className="text-[11px] text-slate-400">Select &ldquo;All Phases&rdquo; to see the full 30-day care trajectory.</p>
+          </div>
+        ) : (
+          <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+            {filteredTimeline.map((bucket, bIdx) => (
+              <div key={bIdx} className="relative">
+                {/* Timeline Step Indicator */}
+                <div className="absolute -left-6 sm:-left-8 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-emerald-600 flex items-center justify-center text-emerald-800 font-bold text-xs shadow-2xs tabular-nums">
+                  {bIdx + 1}
                 </div>
 
-                <div className="space-y-2.5">
-                  {bucket.events.map((evt) => (
-                    <div 
-                      key={evt.id} 
-                      className="p-3.5 rounded border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition flex items-start justify-between gap-3 text-xs"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded bg-white border border-slate-200 text-slate-700 shrink-0 mt-0.5">
-                          {evt.type === 'APPOINTMENT' && <Stethoscope className="w-4 h-4 text-emerald-700" />}
-                          {evt.type === 'LAB_MILESTONE' && <FlaskConical className="w-4 h-4 text-slate-700" />}
-                          {evt.type === 'PROCEDURE_MILESTONE' && <Scissors className="w-4 h-4 text-slate-700" />}
-                          {evt.type === 'MEDICATION_COMPLETION' && <Pill className="w-4 h-4 text-emerald-700" />}
-                        </div>
-                        <div>
-                          <div className="font-bold text-slate-900 text-xs sm:text-sm">{evt.title}</div>
-                          <div className="text-[11px] font-semibold text-emerald-700">{evt.subtitle}</div>
-                          <p className="text-slate-600 text-[11px] mt-1 leading-normal">{evt.details}</p>
-                        </div>
-                      </div>
+                <div className="bg-white rounded-lg border border-slate-200 p-5 sm:p-6 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <h3 className="text-sm font-bold text-slate-900">
+                      {bucket.phase}
+                    </h3>
+                    <span className="text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded tabular-nums">
+                      {bucket.events.length} Milestones
+                    </span>
+                  </div>
 
-                      <div className="text-right shrink-0">
-                        <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-white border border-slate-200 text-slate-700 tabular-nums">
-                          {evt.timeframe}
-                        </span>
+                  <div className="space-y-2.5">
+                    {bucket.events.map((evt) => (
+                      <div 
+                        key={evt.id} 
+                        className="p-3.5 rounded border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition flex items-start justify-between gap-3 text-xs"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 rounded bg-white border border-slate-200 text-slate-700 shrink-0 mt-0.5">
+                            {evt.type === 'APPOINTMENT' && <Stethoscope className="w-4 h-4 text-emerald-700" />}
+                            {evt.type === 'LAB_MILESTONE' && <FlaskConical className="w-4 h-4 text-slate-700" />}
+                            {evt.type === 'PROCEDURE_MILESTONE' && <Scissors className="w-4 h-4 text-slate-700" />}
+                            {evt.type === 'MEDICATION_COMPLETION' && <Pill className="w-4 h-4 text-emerald-700" />}
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-xs sm:text-sm">{evt.title}</div>
+                            <div className="text-[11px] font-semibold text-emerald-700">{evt.subtitle}</div>
+                            <p className="text-slate-600 text-[11px] mt-1 leading-normal">{evt.details}</p>
+                          </div>
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-white border border-slate-200 text-slate-700 tabular-nums">
+                            {evt.timeframe}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -96,7 +96,7 @@ export function App() {
       setSafetyAudit(response.safety_audit);
       setTimeline(response.timeline);
       setAdherence(response.adherence);
-      setActiveTab('validation');
+      setActiveTab('careplan');
     } catch (err: any) {
       alert(`Ingestion error: ${err.message || 'Failed to process document'}`);
     } finally {
