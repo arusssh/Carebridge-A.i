@@ -15,7 +15,7 @@ import { uploadDocument, IngestResponse } from '../api/client';
 import { generateResilientCarePlan } from '../api/resilientEngine';
 
 interface DocumentScannerProps {
-  onScanComplete: (response: IngestResponse) => void;
+  onScanComplete: (response: IngestResponse, documentUrl?: string) => void;
   patientName?: string;
 }
 
@@ -75,14 +75,14 @@ export const DocumentScanner: React.FC<DocumentScannerProps> = ({
       const res = await uploadDocument(selectedFile, patientName, savedKey, selectedModel);
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
-      onScanComplete(res);
+      onScanComplete(res, previewUrl || undefined);
     } catch (err: any) {
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
       console.warn("[DocumentScanner] Engaging resilient zero-failure clinical parser:", err);
       try {
         const fallbackRes = generateResilientCarePlan(selectedFile, patientName, selectedModel);
-        onScanComplete(fallbackRes);
+        onScanComplete(fallbackRes, previewUrl || undefined);
       } catch (fatal) {
         setErrorMsg("Unable to process document. Please try again.");
       }

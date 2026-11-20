@@ -56,6 +56,7 @@ export function App() {
   const [safetyAudit, setSafetyAudit] = useState<SafetyAuditResult | null>(null);
   const [timeline, setTimeline] = useState<TimelineBucket[]>([]);
   const [adherence, setAdherence] = useState<AdherenceStats | null>(null);
+  const [scannedDocumentUrl, setScannedDocumentUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isQuestionsOpen, setIsQuestionsOpen] = useState<boolean>(false);
 
@@ -76,6 +77,7 @@ export function App() {
     setSafetyAudit(null);
     setTimeline([]);
     setAdherence(null);
+    setScannedDocumentUrl(null);
     try {
       localStorage.removeItem('carebridge_auth_user');
     } catch {}
@@ -102,12 +104,15 @@ export function App() {
     }
   };
 
-  const handleScanComplete = (res: IngestResponse) => {
+  const handleScanComplete = (res: IngestResponse, docUrl?: string) => {
     setCarePlan(res.care_plan);
     setSafetyAudit(res.safety_audit);
     setTimeline(res.timeline);
     setAdherence(res.adherence);
-    setActiveTab('validation');
+    if (docUrl) {
+      setScannedDocumentUrl(docUrl);
+    }
+    setActiveTab('careplan');
   };
 
   const handleRefreshCarePlan = async () => {
@@ -256,6 +261,7 @@ export function App() {
             <ValidationReview
               carePlan={carePlan}
               safetyAudit={safetyAudit}
+              documentImageUrl={scannedDocumentUrl}
               onValidateItem={handleValidateItem}
               onProceedToCarePlan={() => setActiveTab('careplan')}
             />
@@ -269,7 +275,12 @@ export function App() {
             <CarePlanView
               carePlan={carePlan}
               safetyAudit={safetyAudit}
+              timeline={timeline}
+              adherence={adherence}
+              documentImageUrl={scannedDocumentUrl}
+              onUpdateTaskStatus={handleUpdateTaskStatus}
               onOpenQuestions={() => setIsQuestionsOpen(true)}
+              onNavigateTab={setActiveTab}
             />
           ) : (
             renderEmptyState('Care Plan Overview')

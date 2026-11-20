@@ -23,6 +23,7 @@ import { CarePlan, SafetyAuditResult, ValidationStatus } from '../types';
 interface ValidationReviewProps {
   carePlan: CarePlan;
   safetyAudit: SafetyAuditResult;
+  documentImageUrl?: string | null;
   onValidateItem: (
     itemType: 'medication' | 'appointment' | 'task',
     itemId: string,
@@ -36,6 +37,7 @@ interface ValidationReviewProps {
 export const ValidationReview: React.FC<ValidationReviewProps> = ({
   carePlan,
   safetyAudit,
+  documentImageUrl,
   onValidateItem,
   onProceedToCarePlan
 }) => {
@@ -777,6 +779,22 @@ export const ValidationReview: React.FC<ValidationReviewProps> = ({
               <p className="text-xs text-slate-500 leading-relaxed bg-slate-50 p-3 rounded border border-slate-200">
                 Click any medication card or quotation icon on the left to verify its exact source grounding in the scanned document.
               </p>
+            )}
+
+            {/* Scanned Document Image Preview if Available */}
+            {documentImageUrl && (
+              <div className="space-y-1.5 pb-2 border-b border-slate-100">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  Scanned Document Preview
+                </span>
+                <div className="rounded border border-slate-200 overflow-hidden bg-slate-100 max-h-48 flex items-center justify-center">
+                  <img 
+                    src={documentImageUrl} 
+                    alt="Prescription Thumbnail" 
+                    className="w-full object-contain max-h-48"
+                  />
+                </div>
+              </div>
             )}
 
             {/* Document Text Pane with Live Highlight */}
