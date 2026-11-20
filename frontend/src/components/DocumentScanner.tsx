@@ -29,9 +29,7 @@ export const DocumentScanner: React.FC<DocumentScannerProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>(() => {
-    return localStorage.getItem('carebridge_gemini_model') || 'gemini-3.5-flash-lite';
-  });
+  const selectedModel = 'gemini-3.5-flash-lite';
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -227,42 +225,6 @@ export const DocumentScanner: React.FC<DocumentScannerProps> = ({
           <span>{errorMsg}</span>
         </div>
       )}
-
-      {/* AI Vision Model Selector Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-lg">
-        <div className="flex items-center gap-2.5">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-          </span>
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-emerald-700" />
-            <span className="text-xs font-semibold text-slate-800">Active Vision Engine:</span>
-            <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
-              ⚡ Google Gemini 3.5 Lite
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label htmlFor="model-select" className="text-[11px] text-slate-600 font-medium">Model Engine:</label>
-          <select
-            id="model-select"
-            value={selectedModel}
-            onChange={(e) => {
-              setSelectedModel(e.target.value);
-              localStorage.setItem('carebridge_gemini_model', e.target.value);
-            }}
-            className="text-xs bg-white border border-slate-300 rounded px-2.5 py-1 text-slate-800 font-semibold focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
-          >
-            <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite (Recommended - Fast &amp; High Precision)</option>
-            <option value="gemini-3.5-flash">🚀 Gemini 3.5 Flash (General Multimodal)</option>
-            <option value="gemini-2.5-flash">🔬 Gemini 2.5 Flash</option>
-            <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash</option>
-            <option value="gemini-1.5-pro">🧠 Gemini 1.5 Pro (Deep Clinical Reasoning)</option>
-          </select>
-        </div>
-      </div>
 
       {/* Upload Dropzone */}
       <div className="bg-white rounded-lg border border-slate-200 p-6 sm:p-8 shadow-2xs space-y-6">
