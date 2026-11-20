@@ -138,11 +138,12 @@ export async function saveGeminiConfig(apiKey: string): Promise<{
   return res.json();
 }
 
-// Option 1: File/Camera Upload & OCR
+// Option 1: File/Camera Upload & OCR (Supports Gemini 3.5 Lite, 3.5 Flash, 2.5 Flash)
 export async function uploadDocument(
   file: File, 
   patientName?: string,
-  apiKey?: string
+  apiKey?: string,
+  model?: string
 ): Promise<IngestResponse & { parsed_metadata: any }> {
   const formData = new FormData();
   formData.append('file', file);
@@ -152,10 +153,16 @@ export async function uploadDocument(
   if (apiKey && apiKey.trim()) {
     formData.append('api_key', apiKey.trim());
   }
+  if (model && model.trim()) {
+    formData.append('model', model.trim());
+  }
 
   const headers: Record<string, string> = {};
   if (apiKey && apiKey.trim()) {
     headers['X-Gemini-API-Key'] = apiKey.trim();
+  }
+  if (model && model.trim()) {
+    headers['X-Gemini-Model'] = model.trim();
   }
 
   const res = await fetch(`${API_BASE}/upload-document`, {

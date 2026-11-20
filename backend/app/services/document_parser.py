@@ -295,12 +295,13 @@ class DocumentParser:
         file_bytes: bytes, 
         filename: str = "image.png", 
         mime_type: str = "image/png",
-        api_key: Optional[str] = None
+        api_key: Optional[str] = None,
+        preferred_model: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Extracts clinical text from a photo or camera scan of a discharge paper / prescription.
-        1. When Gemini API key is configured/provided: uses Gemini 2.5 Flash Multimodal Vision
-           to directly decipher doctor handwriting.
+        1. When Gemini API key is configured/provided: uses Gemini 3.5 Flash-Lite (or chosen model)
+           Multimodal Vision to directly decipher doctor handwriting.
         2. Otherwise runs CareBridge HandwritingVisionEngine (resolution scaling, shadow removal,
            CLAHE ink amplification, multi-pass OCR, and prescription shorthand normalization).
         """
@@ -343,9 +344,23 @@ class DocumentParser:
                     "Format clearly with clinical sections: PATIENT NAME, DIAGNOSIS, ATTENDING PHYSICIAN, DISCHARGE MEDICATIONS, DAILY CARE TASKS, and FOLLOW-UP SCHEDULE."
                 )
 
-                models_to_try = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+                candidate_models = [
+                    "gemini-3.5-flash-lite", 
+                    "gemini-3.5-lite", 
+                    "gemini-3.5-flash", 
+                    "gemini-2.5-flash", 
+                    "gemini-1.5-flash", 
+                    "gemini-2.0-flash", 
+                    "gemini-1.5-pro"
+                ]
+                if preferred_model and preferred_model.strip():
+                    p_model = preferred_model.strip().lower()
+                    models_to_try = [p_model] + [m for m in candidate_models if m != p_model]
+                else:
+                    models_to_try = candidate_models
+
                 text = ""
-                used_model = "gemini-2.5-flash"
+                used_model = models_to_try[0]
                 for m in models_to_try:
                     try:
                         response = client.models.generate_content(

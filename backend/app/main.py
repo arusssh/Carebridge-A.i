@@ -286,14 +286,17 @@ async def upload_document(
     request: Request,
     file: UploadFile = File(...),
     patient_name: Optional[str] = Form(None),
-    api_key: Optional[str] = Form(None)
+    api_key: Optional[str] = Form(None),
+    model: Optional[str] = Form(None)
 ):
     """
     Accepts PDF or Image uploads (smartphone photos, prescription scans),
     extracts text via OCR/Vision (with advanced handwriting deciphering),
     and generates a structured care plan.
+    Supports Gemini 3.5 Flash-Lite, Gemini 3.5 Flash, 2.5 Flash, and clinical heuristics.
     """
     effective_api_key = api_key or request.headers.get("x-gemini-api-key") or os.environ.get("GEMINI_API_KEY")
+    effective_model = model or request.headers.get("x-gemini-model") or "gemini-3.5-flash-lite"
 
     file_bytes = await file.read()
     filename = file.filename or "uploaded_document"
@@ -306,7 +309,8 @@ async def upload_document(
             file_bytes, 
             filename, 
             content_type, 
-            api_key=effective_api_key
+            api_key=effective_api_key,
+            preferred_model=effective_model
         )
 
     if not parse_result.get("success") or not parse_result.get("text"):
@@ -318,7 +322,8 @@ async def upload_document(
     care_plan = AIExtractor.extract_care_plan(
         raw_text, 
         patient_name=patient_name, 
-        api_key=effective_api_key
+        api_key=effective_api_key,
+        preferred_model=effective_model
     )
     audit_result = SafetyAuditor.audit_care_plan(care_plan)
 
@@ -339,7 +344,8 @@ async def upload_document(
         "parsed_metadata": {
             "filename": filename,
             "file_type": parse_result.get("file_type"),
-            "engine": parse_result.get("engine", "CareBridge Handwriting Engine"),
+            "engine": parse_result.get("engine", f"CareBridge AI ({effective_model})"),
+            "model_used": effective_model,
             "is_handwriting_optimized": parse_result.get("is_handwriting_optimized", True),
             "page_count": parse_result.get("page_count", 1),
             "char_count": parse_result.get("char_count", len(raw_text))
@@ -353,8 +359,14 @@ def get_gemini_config():
     return {
         "has_key": bool(api_key),
         "key_preview": f"{api_key[:6]}...{api_key[-4:]}" if len(api_key) > 10 else "",
-        "active_model": "Google Gemini 2.5 Flash Multimodal Vision",
-        "supported_models": ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+        "active_model": "Google Gemini 3.5 Flash-Lite (Vision & Handwriting Optimized)",
+        "supported_models": [
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-2.5-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro"
+        ]
     }
 
 @app.post("/api/config/gemini-key")

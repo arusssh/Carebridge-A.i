@@ -76,13 +76,14 @@ class AIExtractor:
         raw_text: str, 
         patient_name: Optional[str] = None, 
         preset_id: Optional[str] = None,
-        api_key: Optional[str] = None
+        api_key: Optional[str] = None,
+        preferred_model: Optional[str] = None
     ) -> CarePlan:
         # Check if Google Gemini API key is available
         key = api_key or os.environ.get("GEMINI_API_KEY")
         if key and not preset_id:
             try:
-                return cls._extract_with_gemini(raw_text, patient_name, key)
+                return cls._extract_with_gemini(raw_text, patient_name, key, preferred_model)
             except Exception as e:
                 print(f"[AIExtractor] Gemini API call failed or timed out ({e}). Falling back to clinical heuristic engine.")
 
@@ -90,7 +91,13 @@ class AIExtractor:
         return cls._extract_with_clinical_nlp(raw_text, patient_name)
 
     @classmethod
-    def _extract_with_gemini(cls, raw_text: str, patient_name: Optional[str], api_key: str) -> CarePlan:
+    def _extract_with_gemini(
+        cls, 
+        raw_text: str, 
+        patient_name: Optional[str], 
+        api_key: str,
+        preferred_model: Optional[str] = None
+    ) -> CarePlan:
         from google import genai
         from google.genai import types
 
@@ -137,7 +144,21 @@ class AIExtractor:
         }}
         """
 
-        models_to_try = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+        candidate_models = [
+            "gemini-3.5-flash-lite", 
+            "gemini-3.5-lite", 
+            "gemini-3.5-flash", 
+            "gemini-2.5-flash", 
+            "gemini-1.5-flash", 
+            "gemini-2.0-flash", 
+            "gemini-1.5-pro"
+        ]
+        if preferred_model and preferred_model.strip():
+            p_model = preferred_model.strip().lower()
+            models_to_try = [p_model] + [m for m in candidate_models if m != p_model]
+        else:
+            models_to_try = candidate_models
+
         data = None
         for m in models_to_try:
             try:

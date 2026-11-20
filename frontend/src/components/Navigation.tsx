@@ -70,6 +70,9 @@ export const Navigation: React.FC<NavigationProps> = ({
                 <span className="text-[10px] font-mono tracking-wider uppercase px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
                   Clinical AI
                 </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-100/90 text-emerald-800 font-semibold border border-emerald-200">
+                  ⚡ Gemini 3.5 Lite
+                </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden sm:block">
                 Post-Discharge Validation &amp; Care Coordination
